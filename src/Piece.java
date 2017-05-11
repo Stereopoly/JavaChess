@@ -5,7 +5,7 @@ import java.util.ArrayList;
  */
 public abstract class Piece implements Cloneable {
     private int color;
-    private String path;
+    private String pictureLocation;
     private String id = null;
     public ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
 
@@ -19,12 +19,12 @@ public abstract class Piece implements Cloneable {
         this.color = color;
     }
 
-    public String getPath() {
-        return path;
+    public String getPictureLocation() {
+        return pictureLocation;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setPictureLocation(String pictureLocation) {
+        this.pictureLocation = pictureLocation;
     }
 
     public String getId() {

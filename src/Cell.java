@@ -87,6 +87,10 @@ public class Cell extends JPanel implements Cloneable {
         return this.isPossibleDestination;
     }
 
+    public boolean isCheck() {
+        return this.isCheck;
+    }
+
 //    TODO: Colors for if King is in check
 
 }
