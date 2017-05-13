@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by Oscar on 5/10/17.
@@ -14,11 +16,16 @@ public class JavaChess extends JFrame implements MouseListener {
     private static Pawn whitePawns[];
     private static Pawn blackPawns[];
     private static Rook whiteRook1, whiteRook2, blackRook1, blackRook2;
+    private static King whiteKing, blackKing;
 
     // ui
     private Container content;
     private Cell chessBoardState[][];
-    private Cell cellPressed;
+
+    // game logic
+    private Cell cellPressed, previousCellPressed;
+    private int currentPlayer = 0;   // 0 for white, 1 for black
+    private ArrayList<Cell> possibleDestinations = new ArrayList<Cell>();
 
 
     public static JavaChess MainScreen;
@@ -40,7 +47,9 @@ public class JavaChess extends JFrame implements MouseListener {
         whiteRook2 = new Rook("WhiteRook2", "whiterook.png", 0);
         blackRook1 = new Rook("BlackRook1", "blackrook.png", 1);
         blackRook2 = new Rook("blackRook2", "blackrook.png", 1);
-
+        // kings
+        whiteKing = new King("WhiteKing", "whiteking.png", 0, 7, 3);
+        blackKing = new King("BlackKing", "blackking.png", 1, 0, 3);
 
         MainScreen = new JavaChess();
         MainScreen.setVisible(true);
@@ -76,6 +85,10 @@ public class JavaChess extends JFrame implements MouseListener {
                     piece = whiteRook1;
                 } else if (i == 7 && j == 7) {
                     piece = whiteRook2;
+                } else if (i == 0 && j == 3) {
+                    piece = blackKing;
+                } else if (i == 7 && j == 3) {
+                    piece = whiteKing;
                 }
 //                TODO: All other pieces to be generated before pawns
                 else if (i == 1) {
@@ -93,10 +106,84 @@ public class JavaChess extends JFrame implements MouseListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
+    private King getKing(int color) {
+        if (color == 0) {
+            return whiteKing;
+        } else {
+            return blackKing;
+        }
+    }
+
+    // Functions for highlighting cells
+    private void clearDestinations(ArrayList<Cell> cells) {
+        for (Cell cell : cells) {
+            cell.removeHighlightDestinations();
+        }
+    }
+
+    private void highlightDestinations(ArrayList<Cell> cells) {
+        for (Cell cell : cells) {
+            cell.highlightPossibleDestinations();
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         cellPressed = (Cell) e.getSource();
 
+        if (previousCellPressed == null) {
+            if (cellPressed.getPiece() != null) {
+                if (cellPressed.getPiece().getColor() == currentPlayer) {
+                    cellPressed.selectPiece();
+                    previousCellPressed = cellPressed;
+
+                    possibleDestinations.clear();
+                    possibleDestinations = cellPressed.getPiece().move(chessBoardState, cellPressed.x, cellPressed.y);
+                    if (cellPressed.getPiece() instanceof King) {
+//                        TODO: Filter out moves that don't put king in check
+                    } else {
+//                        TODO: Find moves to get king out of check if needed
+                    }
+                    highlightDestinations(possibleDestinations);
+                } else {
+                    return;
+                }
+            }
+        } else {
+            if (cellPressed.getX() == previousCellPressed.x && cellPressed.y == previousCellPressed.y) {
+                // deselect current clicked location
+                cellPressed.deselectPiece();
+                clearDestinations(possibleDestinations);
+                possibleDestinations.clear();
+                previousCellPressed = null;
+            } else if (cellPressed.getPiece() == null || previousCellPressed.getPiece().getColor() != cellPressed.getPiece().getColor()) {
+                // selected empty spot or opponent piece
+                if (cellPressed.isPossibleDestination()) {
+//                    TODO: logic for moving piece
+                }
+                if (previousCellPressed != null) {
+                    previousCellPressed.deselectPiece();
+                    previousCellPressed = null;
+                }
+                clearDestinations(possibleDestinations);
+                possibleDestinations.clear();
+
+            } else if (previousCellPressed.getPiece().getColor() == cellPressed.getPiece().getColor()) {
+                previousCellPressed.deselectPiece();
+                clearDestinations(possibleDestinations);
+                possibleDestinations.clear();
+
+                cellPressed.selectPiece();
+                previousCellPressed = cellPressed;
+                possibleDestinations = cellPressed.getPiece().move(chessBoardState, cellPressed.x, cellPressed.y);
+                if (cellPressed.getPiece() instanceof King) {
+//                        TODO: Filter out moves that don't put king in check (same as above)
+                } else {
+//                        TODO: Find moves to get king out of check if needed (same as above)
+                }
+                highlightDestinations(possibleDestinations);
+            }
+        }
     }
 
 
