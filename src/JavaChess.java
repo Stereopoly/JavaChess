@@ -150,7 +150,7 @@ public class JavaChess extends JFrame implements MouseListener {
                 }
             }
         } else {
-            if (cellPressed.getX() == previousCellPressed.x && cellPressed.y == previousCellPressed.y) {
+            if (cellPressed.x == previousCellPressed.x && cellPressed.y == previousCellPressed.y) {
                 // deselect current clicked location
                 cellPressed.deselectPiece();
                 clearDestinations(possibleDestinations);
@@ -159,7 +159,14 @@ public class JavaChess extends JFrame implements MouseListener {
             } else if (cellPressed.getPiece() == null || previousCellPressed.getPiece().getColor() != cellPressed.getPiece().getColor()) {
                 // selected empty spot or opponent piece
                 if (cellPressed.isPossibleDestination()) {
-//                    TODO: logic for moving piece
+                    if (cellPressed.getPiece() != null) {
+                        cellPressed.removePiece();
+                    }
+                    cellPressed.setPiece(previousCellPressed.getPiece());
+//                    TODO: check logic
+                    previousCellPressed.removePiece();
+
+                    changePlayerTurn();
                 }
                 if (previousCellPressed != null) {
                     previousCellPressed.deselectPiece();
@@ -186,6 +193,18 @@ public class JavaChess extends JFrame implements MouseListener {
         }
     }
 
+    private void changePlayerTurn() {
+//        TODO: Check if game over
+
+        if (possibleDestinations.isEmpty() == false) {
+            clearDestinations(possibleDestinations);
+        }
+        if (previousCellPressed != null) {
+            previousCellPressed.deselectPiece();
+        }
+        previousCellPressed = null;
+        currentPlayer = 1 - currentPlayer;
+    }
 
     @Override
     public void mouseEntered(MouseEvent e) {
