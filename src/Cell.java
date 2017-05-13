@@ -52,11 +52,15 @@ public class Cell extends JPanel implements Cloneable {
 
     public void setPiece(Piece piece) {
         this.piece = piece;
-//        TODO: Set picture details later
+        ImageIcon imageIcon = new ImageIcon(this.getClass().getResource(piece.getPictureLocation()));
+        content = new JLabel(imageIcon);
+        this.add(content);
     }
 
     public void removePiece() {
-//        TODO: Add remove functionality
+//        TODO: Check if king
+        this.piece = null;
+        this.remove(content);
     }
 
     public void selectPiece() {

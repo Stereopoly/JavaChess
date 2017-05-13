@@ -13,7 +13,16 @@ public class Rook extends Piece {
 
     @Override
     public ArrayList<Cell> move(Cell[][] pos, int x, int y) {
-//        TODO: Override this
+        possibleMoves.clear();
+
+//        TODO: Implement Rook movement
+        if (getColor() == 0) {  // white piece
+
+        } else {   // black piece
+
+        }
+
+        return possibleMoves;
     }
 }
 
