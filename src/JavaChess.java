@@ -17,6 +17,7 @@ public class JavaChess extends JFrame implements MouseListener {
     private static Pawn blackPawns[];
     private static Rook whiteRook1, whiteRook2, blackRook1, blackRook2;
     private static King whiteKing, blackKing;
+    private static Bishop whiteBishop1, whiteBishop2, blackBishop1, blackBishop2;
 
     // ui
     private Container content;
@@ -50,6 +51,12 @@ public class JavaChess extends JFrame implements MouseListener {
         // kings
         whiteKing = new King("WhiteKing", "whiteking.png", 0, 7, 3);
         blackKing = new King("BlackKing", "blackking.png", 1, 0, 3);
+        // bishops
+        whiteBishop1 = new Bishop("WhiteBishop1", "whitebishop.png", 0);
+        whiteBishop2 = new Bishop("WhiteBishop2", "whitebishop.png", 0);
+        blackBishop1 = new Bishop("BlackBishop1", "blackbishop.png", 1);
+        blackBishop2 = new Bishop("BlackBishop2", "blackbishop.png", 1);
+
 
         MainScreen = new JavaChess();
         MainScreen.setVisible(true);
@@ -89,6 +96,14 @@ public class JavaChess extends JFrame implements MouseListener {
                     piece = blackKing;
                 } else if (i == 7 && j == 3) {
                     piece = whiteKing;
+                } else if (i == 7 && j == 2) {
+                    piece = whiteBishop1;
+                } else if (i == 7 && j == 5) {
+                    piece = whiteBishop2;
+                } else if (i == 0 && j == 2) {
+                    piece = blackBishop1;
+                } else if (i == 0 && j == 5) {
+                    piece = blackBishop2;
                 }
 //                TODO: All other pieces to be generated before pawns
                 else if (i == 1) {
