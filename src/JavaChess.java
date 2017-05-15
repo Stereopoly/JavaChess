@@ -18,6 +18,7 @@ public class JavaChess extends JFrame implements MouseListener {
     private static Rook whiteRook1, whiteRook2, blackRook1, blackRook2;
     private static King whiteKing, blackKing;
     private static Bishop whiteBishop1, whiteBishop2, blackBishop1, blackBishop2;
+    private static Knight whiteKnight1, whiteKnight2, blackKnight1, blackKnight2;
 
     // ui
     private Container content;
@@ -40,7 +41,7 @@ public class JavaChess extends JFrame implements MouseListener {
         whitePawns = new Pawn[8];
         blackPawns = new Pawn[8];
         for (int i = 0; i < whitePawns.length; i++) {
-            whitePawns[i] = new Pawn("WhitePawn0" + (i + 1), "whitepawn.png", 0);  // TODO: Add image name
+            whitePawns[i] = new Pawn("WhitePawn0" + (i + 1), "whitepawn.png", 0);
             blackPawns[i] = new Pawn("BlackPawn0" + (i + 1), "blackpawn.png", 1);
         }
         // rooks
@@ -56,7 +57,11 @@ public class JavaChess extends JFrame implements MouseListener {
         whiteBishop2 = new Bishop("WhiteBishop2", "whitebishop.png", 0);
         blackBishop1 = new Bishop("BlackBishop1", "blackbishop.png", 1);
         blackBishop2 = new Bishop("BlackBishop2", "blackbishop.png", 1);
-
+        // knights
+        whiteKnight1 = new Knight("WhiteKnight1", "whiteknight.png", 0);
+        whiteKnight2 = new Knight("WhiteKnight2", "whiteknight.png", 0);
+        blackKnight1 = new Knight("BlackKnight1", "blackknight.png", 1);
+        blackKnight2 = new Knight("BlacKKnight2", "blackknight.png", 1);
 
         MainScreen = new JavaChess();
         MainScreen.setVisible(true);
@@ -104,6 +109,14 @@ public class JavaChess extends JFrame implements MouseListener {
                     piece = blackBishop1;
                 } else if (i == 0 && j == 5) {
                     piece = blackBishop2;
+                } else if (i == 7 && j == 1) {
+                    piece = whiteKnight1;
+                } else if (i == 7 && j == 6) {
+                    piece = whiteKnight2;
+                } else if (i == 0 && j == 1) {
+                    piece = blackKnight1;
+                } else if (i == 0 && j == 6) {
+                    piece = blackKnight2;
                 }
 //                TODO: All other pieces to be generated before pawns
                 else if (i == 1) {
@@ -219,6 +232,12 @@ public class JavaChess extends JFrame implements MouseListener {
         }
         previousCellPressed = null;
         currentPlayer = 1 - currentPlayer;
+
+        switch (currentPlayer) {
+            case 0: setTitle("Java Chess - White's Turn to Move"); break;
+            case 1: setTitle("Java Chess - Black's Turn to Move"); break;
+            default: setTitle("Java Chess"); break;
+        }
     }
 
     @Override
