@@ -34,7 +34,6 @@ public class JavaChess extends JFrame implements MouseListener {
     public static JavaChess MainScreen;
     private JPanel board = new JPanel(new GridLayout(8, 8));
 
-    private static String move;
 
     public static void main(String[] args) {
         // generate pieces
@@ -73,7 +72,6 @@ public class JavaChess extends JFrame implements MouseListener {
     }
 
     public JavaChess() {
-        move = "White";
         board = new JPanel(new GridLayout(8, 8));
         board.setMinimumSize(new Dimension(480, 480));
 

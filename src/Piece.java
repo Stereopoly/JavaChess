@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * Created by Oscar on 5/10/17.
  */
-public abstract class Piece implements Cloneable {
+public abstract class Piece {
     private int color;
     private String pictureLocation;
     private String id = null;
@@ -35,7 +35,4 @@ public abstract class Piece implements Cloneable {
         this.id = id;
     }
 
-    public Piece getCopy() throws CloneNotSupportedException {
-        return (Piece) this.clone();
-    }
 }
