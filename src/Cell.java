@@ -64,7 +64,7 @@ public class Cell extends JPanel implements Cloneable {
     }
 
     public void selectPiece() {
-        this.setBorder(BorderFactory.createLineBorder(Color.red, 4));
+        this.setBorder(BorderFactory.createLineBorder(new Color(231, 76, 60), 4));
         this.isSelected = true;
     }
 
@@ -78,7 +78,7 @@ public class Cell extends JPanel implements Cloneable {
     }
 
     public void highlightPossibleDestinations() {
-        this.setBorder(BorderFactory.createLineBorder(Color.blue, 4));
+        this.setBorder(BorderFactory.createLineBorder(new Color(39, 174, 96), 4));
         this.isPossibleDestination = true;
     }
 
