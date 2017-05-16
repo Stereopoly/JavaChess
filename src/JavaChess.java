@@ -123,9 +123,7 @@ public class JavaChess extends JFrame implements MouseListener {
                     piece = whiteQueen;
                 } else if (i == 0 && j == 4) {
                     piece = blackQueen;
-                }
-//                TODO: All other pieces to be generated before pawns
-                else if (i == 1) {
+                } else if (i == 1) {
                     piece = blackPawns[j];
                 } else if (i == 6) {
                     piece = whitePawns[j];
@@ -137,7 +135,7 @@ public class JavaChess extends JFrame implements MouseListener {
             }
         }
         content.add(board);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private King getKing(int color) {
@@ -197,7 +195,7 @@ public class JavaChess extends JFrame implements MouseListener {
                         cellPressed.removePiece();
                     }
                     cellPressed.setPiece(previousCellPressed.getPiece());
-//                    TODO: check logic
+//                    TODO: king check logic
                     previousCellPressed.removePiece();
 
                     changePlayerTurn();
@@ -230,7 +228,7 @@ public class JavaChess extends JFrame implements MouseListener {
     private void changePlayerTurn() {
 //        TODO: Check if game over
 
-        if (possibleDestinations.isEmpty() == false) {
+        if (!possibleDestinations.isEmpty()) {
             clearDestinations(possibleDestinations);
         }
         if (previousCellPressed != null) {
