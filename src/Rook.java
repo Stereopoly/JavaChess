@@ -15,7 +15,6 @@ public class Rook extends Piece {
     public ArrayList<Cell> move(Cell[][] pos, int x, int y) {
         possibleMoves.clear();
 
-//        TODO: Implement Rook movement
         // left movement
         for (int i = y - 1; i >= 0; i--) {
             if (pos[x][i].getPiece() == null) {

@@ -15,8 +15,6 @@ public class Pawn extends Piece {
     public ArrayList<Cell> move(Cell[][] pos, int x, int y) {
         possibleMoves.clear();
 
-        System.out.println("X: " + y + " Y: " + y);
-//        TODO: Implement Pawn movement
         if (getColor() == 0) {  // white piece
             if (x == 0) {
                 return possibleMoves;

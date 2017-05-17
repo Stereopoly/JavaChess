@@ -61,7 +61,7 @@ public class Queen extends Piece {
             }
         }
 
-        // bishop code
+        // bishop code:
         // down and left
         for (int tx = x + 1, ty = y - 1; tx < 8 && ty >= 0; tx++, ty--) {
             if (pos[tx][ty].getPiece() == null) {
