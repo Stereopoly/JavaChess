@@ -38,7 +38,22 @@ public class King extends Piece {
     }
 
     public boolean isKingInDanger(Cell chessBoardState[][]) {
-//        TODO: Do this stuff
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessBoardState[i][j].getPiece().getColor() != this.getColor()) {
+                    // opposing color
+                    ArrayList<Cell> tempMoves = chessBoardState[i][j].getPiece().move(chessBoardState, i, j);
+                    for (Cell move : tempMoves) {
+                        if (move.getPiece() != null) {
+                            if (move.getPiece() instanceof King) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return false;
     }
 

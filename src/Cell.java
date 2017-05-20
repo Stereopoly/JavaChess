@@ -29,7 +29,7 @@ public class Cell extends JPanel implements Cloneable {
         }
     }
 
-    /*public Cell(Cell cell) throws CloneNotSupportedException {
+    /*public Cell(Cell cell) {
         this.x = cell.x;
         this.y = cell.y;
         setLayout(new BorderLayout());
@@ -45,6 +45,10 @@ public class Cell extends JPanel implements Cloneable {
             piece = null;
         }
     }*/
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     public Piece getPiece() {
         return piece;
