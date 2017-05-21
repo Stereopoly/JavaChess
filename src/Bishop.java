@@ -5,6 +5,8 @@ import java.util.ArrayList;
  */
 public class Bishop extends Piece {
 
+    private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
+
     public Bishop(String id, String pictureName, int color) {
         setId(id);
         setPictureLocation(pictureName);

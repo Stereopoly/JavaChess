@@ -5,6 +5,8 @@ import java.util.ArrayList;
  */
 public class Queen extends Piece {
 
+    private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
+
     public Queen(String id, String pictureName, int color) {
         setId(id);
         setPictureLocation(pictureName);

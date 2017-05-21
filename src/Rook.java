@@ -5,6 +5,8 @@ import java.util.ArrayList;
  */
 public class Rook extends Piece {
 
+    private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
+
     public Rook(String id, String pictureName, int color) {
         setId(id);
         setPictureLocation(pictureName);

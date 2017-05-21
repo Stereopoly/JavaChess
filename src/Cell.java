@@ -99,6 +99,19 @@ public class Cell extends JPanel implements Cloneable {
         return this.isCheck;
     }
 
-//    TODO: Colors for if King is in check
+    public void setCheck() {
+        this.setBackground(new Color(231, 76, 60));
+        this.isCheck = true;
+    }
+
+    public void removeCheck() {
+        this.setBorder(null);
+        if ((x + y) % 2 == 0) {
+            setBackground(new Color(121, 85, 72));
+        } else {
+            setBackground(Color.white);
+        }
+        this.isCheck = false;
+    }
 
 }

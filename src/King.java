@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class King extends Piece {
 
     private int x, y;
+    private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
 
     public King(String id, String pictureName, int color, int x, int y) {
         setId(id);
@@ -37,23 +38,39 @@ public class King extends Piece {
         return possibleMoves;
     }
 
-    public boolean isKingInDanger(Cell chessBoardState[][]) {
+    public boolean isKingInDanger(Cell[][] chessBoardState, int color) {
+        Cell[][] tempChessBoardState = new Cell[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (chessBoardState[i][j].getPiece().getColor() != this.getColor()) {
-                    // opposing color
-                    ArrayList<Cell> tempMoves = chessBoardState[i][j].getPiece().move(chessBoardState, i, j);
-                    for (Cell move : tempMoves) {
-                        if (move.getPiece() != null) {
-                            if (move.getPiece() instanceof King) {
-                                return true;
-                            }
-                        }
-                    }
+                try {
+                    tempChessBoardState[i][j] = (Cell) chessBoardState[i][j].clone();
+                } catch(CloneNotSupportedException e) {
+                    System.out.println(e.getLocalizedMessage());
                 }
             }
         }
 
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (tempChessBoardState[i][j].getPiece() == null) {
+                    continue;
+                }
+                if (tempChessBoardState[i][j].getPiece().getColor() != color) {
+                    // opposing color
+                    System.out.println("Color: " + tempChessBoardState[i][j].getPiece().getColor());
+                    ArrayList<Cell> tempMoves = tempChessBoardState[i][j].getPiece().move(tempChessBoardState, i, j);
+//                    for (Cell move : tempMoves) {
+//                        if (move.getPiece() != null) {
+//                            if (move.getPiece() instanceof King) {
+//                                System.out.println("King is in danger");
+//                                return true;
+//                            }
+//                        }
+//                    }
+                }
+            }
+        }
+        System.out.println("King is not in danger");
         return false;
     }
 

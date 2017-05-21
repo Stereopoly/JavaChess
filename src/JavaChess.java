@@ -148,8 +148,13 @@ public class JavaChess extends JFrame implements MouseListener {
 
     // Functions for highlighting cells
     private void clearDestinations(ArrayList<Cell> cells) {
-        for (Cell cell : cells) {
-            cell.removeHighlightDestinations();
+        System.out.println("Length of array to clear: " + cells.size());
+        System.out.println("In clear function");
+        printArrayList(cells);
+        System.out.println("Clear destinations");
+        for (int i = 0; i < cells.size(); i++) {
+            System.out.println("per cell");
+            cells.get(i).removeHighlightDestinations();
         }
     }
 
@@ -171,6 +176,7 @@ public class JavaChess extends JFrame implements MouseListener {
 
                     possibleDestinations.clear();
                     possibleDestinations = cellPressed.getPiece().move(chessBoardState, cellPressed.x, cellPressed.y);
+
                     if (cellPressed.getPiece() instanceof King) {
                         possibleDestinations = filterKingInDangerMoves(possibleDestinations, cellPressed);
                     } else {
@@ -181,6 +187,8 @@ public class JavaChess extends JFrame implements MouseListener {
                         // TODO: check if king will be in danger given move
                     }
                     highlightDestinations(possibleDestinations);
+                    System.out.println("Populated");
+                    printArrayList(possibleDestinations);
                 } else {
                     return;
                 }
@@ -188,6 +196,8 @@ public class JavaChess extends JFrame implements MouseListener {
         } else {
             if (cellPressed.x == previousCellPressed.x && cellPressed.y == previousCellPressed.y) {
                 // deselect current clicked location
+                System.out.println("Clicked same place");
+                printArrayList(possibleDestinations);
                 cellPressed.deselectPiece();
                 clearDestinations(possibleDestinations);
                 possibleDestinations.clear();
@@ -199,20 +209,39 @@ public class JavaChess extends JFrame implements MouseListener {
                         cellPressed.removePiece();
                     }
                     cellPressed.setPiece(previousCellPressed.getPiece());
-//                    TODO: king check logic
+                    if (previousCellPressed.isCheck()) {
+                        previousCellPressed.removeCheck();
+                    }
                     previousCellPressed.removePiece();
-
+                //    System.out.println(getKing(1 - currentPlayer).isKingInDanger(chessBoardState, 1 - currentPlayer));
+                    /*if (getKing(1 - currentPlayer).isKingInDanger(chessBoardState)) {
+                        // check if its checkmate
+                        chessBoardState[getKing(1 - currentPlayer).getX()][getKing(1 - currentPlayer).getY()].setCheck();
+                        // TODO: Checkmate logic
+                    }
+                    if (!getKing(currentPlayer).isKingInDanger(chessBoardState)) {
+                        // not in check anymore
+                        chessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].removeCheck();
+                    }
+                    if (cellPressed.getPiece() instanceof King) {
+                        ((King) cellPressed.getPiece()).setX(cellPressed.x);
+                        ((King) cellPressed.getPiece()).setY(cellPressed.y);
+                    }*/
                     changePlayerTurn();
                 }
                 if (previousCellPressed != null) {
                     previousCellPressed.deselectPiece();
                     previousCellPressed = null;
                 }
+                System.out.println("Empty spot or opponent piece");
+                printArrayList(possibleDestinations);
                 clearDestinations(possibleDestinations);
                 possibleDestinations.clear();
 
             } else if (previousCellPressed.getPiece().getColor() == cellPressed.getPiece().getColor()) {
                 previousCellPressed.deselectPiece();
+                System.out.println("Clear clicked on different piece of same color");
+                printArrayList(possibleDestinations);
                 clearDestinations(possibleDestinations);
                 possibleDestinations.clear();
 
@@ -220,17 +249,28 @@ public class JavaChess extends JFrame implements MouseListener {
                 previousCellPressed = cellPressed;
                 possibleDestinations = cellPressed.getPiece().move(chessBoardState, cellPressed.x, cellPressed.y);
                 if (cellPressed.getPiece() instanceof King) {
-//                        TODO: Filter out moves that don't put king in check (same as above)
+                    // same as above logic, remove possible danger moves
+                    possibleDestinations = filterKingInDangerMoves(possibleDestinations, cellPressed);
                 } else {
-//                        TODO: Find moves to get king out of check if needed (same as above)
+                    if (chessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].isCheck()) {
+                        System.out.println("Is check");
+                        possibleDestinations = new ArrayList<Cell>(filterKingInDangerMoves(possibleDestinations, cellPressed));
+                    }
+                    // TODO: get new moves
                 }
                 highlightDestinations(possibleDestinations);
+                System.out.println("Repopulated");
+                printArrayList(possibleDestinations);
             }
         }
+        /*if (cellPressed.getPiece() != null && cellPressed.getPiece() instanceof King) {
+            ((King) cellPressed.getPiece()).setX(cellPressed.x);
+            ((King) cellPressed.getPiece()).setY(cellPressed.y);
+        }*/
     }
 
     private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell cell) {
-        ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
+       /* ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
         Cell[][] tempChessBoardState = new Cell[8][8];
         int x, y;
         for (int k = 0; k < possibleDestinations.size() - 1; k++) {
@@ -262,12 +302,17 @@ public class JavaChess extends JFrame implements MouseListener {
             }
 
         }
-        return filteredDestinations;
+        System.out.println("Filtered: ");
+        printArrayList(filteredDestinations);*/
+        return possibleDestinations;
     }
 
 
     private void changePlayerTurn() {
 //        TODO: Check if game over
+
+        System.out.println("Change turn");
+        printArrayList(possibleDestinations);
 
         if (!possibleDestinations.isEmpty()) {
             clearDestinations(possibleDestinations);
@@ -303,5 +348,11 @@ public class JavaChess extends JFrame implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
 
+    }
+
+    private void printArrayList(ArrayList<Cell> cells) {
+        for (Cell cell : cells) {
+            System.out.println("X: " + cell.getX() + " Y: " + cell.getY());
+        }
     }
 }

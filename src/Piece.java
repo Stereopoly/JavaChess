@@ -7,7 +7,7 @@ public abstract class Piece {
     private int color;
     private String pictureLocation;
     private String id = null;
-    public ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
+  //  protected ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
 
     public abstract ArrayList<Cell> move(Cell pos[][], int x, int y);
 
