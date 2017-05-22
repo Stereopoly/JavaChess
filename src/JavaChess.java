@@ -183,8 +183,9 @@ public class JavaChess extends JFrame implements MouseListener {
                         // find moves to get king out of check
                         if (chessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].isCheck()) {
                             possibleDestinations = new ArrayList<Cell>(filterKingInDangerMoves(possibleDestinations, cellPressed));
+                        } else if (!possibleDestinations.isEmpty() && willKingBeInCheck(cellPressed, possibleDestinations.get(0))) {
+                            possibleDestinations.clear();
                         }
-                        // TODO: check if king will be in danger given move
                     }
                     highlightDestinations(possibleDestinations);
                     System.out.println("Populated");
@@ -213,20 +214,19 @@ public class JavaChess extends JFrame implements MouseListener {
                         previousCellPressed.removeCheck();
                     }
                     previousCellPressed.removePiece();
-                    System.out.println(getKing(1 - currentPlayer).isKingInDanger(chessBoardState, 1 - currentPlayer));
-                    /*if (getKing(1 - currentPlayer).isKingInDanger(chessBoardState)) {
+                    if (getKing(1 - currentPlayer).isKingInDanger(chessBoardState, 1 - currentPlayer)) {
                         // check if its checkmate
                         chessBoardState[getKing(1 - currentPlayer).getX()][getKing(1 - currentPlayer).getY()].setCheck();
                         // TODO: Checkmate logic
                     }
-                    if (!getKing(currentPlayer).isKingInDanger(chessBoardState)) {
+                    if (!getKing(currentPlayer).isKingInDanger(chessBoardState, currentPlayer)) {
                         // not in check anymore
                         chessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].removeCheck();
                     }
                     if (cellPressed.getPiece() instanceof King) {
                         ((King) cellPressed.getPiece()).setX(cellPressed.x);
                         ((King) cellPressed.getPiece()).setY(cellPressed.y);
-                    }*/
+                    }
                     changePlayerTurn();
                 }
                 if (previousCellPressed != null) {
@@ -255,58 +255,92 @@ public class JavaChess extends JFrame implements MouseListener {
                     if (chessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].isCheck()) {
                         System.out.println("Is check");
                         possibleDestinations = new ArrayList<Cell>(filterKingInDangerMoves(possibleDestinations, cellPressed));
+                    } else if (!possibleDestinations.isEmpty() && willKingBeInCheck(cellPressed, possibleDestinations.get(0))) {
+                        possibleDestinations.clear();
                     }
-                    // TODO: get new moves
                 }
                 highlightDestinations(possibleDestinations);
                 System.out.println("Repopulated");
                 printArrayList(possibleDestinations);
             }
         }
-        /*if (cellPressed.getPiece() != null && cellPressed.getPiece() instanceof King) {
+        if (cellPressed.getPiece() != null && cellPressed.getPiece() instanceof King) {
             ((King) cellPressed.getPiece()).setX(cellPressed.x);
             ((King) cellPressed.getPiece()).setY(cellPressed.y);
-        }*/
+        }
     }
 
+    // filter moves that put king in danger
     private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell cell) {
-       /* ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
+        ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
         Cell[][] tempChessBoardState = new Cell[8][8];
         int x, y;
         for (int k = 0; k < possibleDestinations.size() - 1; k++) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     try {
-                        tempChessBoardState[i][j] = (Cell) chessBoardState[i][j].clone();
+                        tempChessBoardState[i][j] = new Cell(chessBoardState[i][j]);
                     } catch(CloneNotSupportedException e) {
                         System.out.println(e.getLocalizedMessage());
                     }
                 }
             }
-            Cell tempCell = possibleDestinations.get(k + 1);
+            Cell tempCell = possibleDestinations.get(k);
             if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() != null) {
                 tempChessBoardState[tempCell.x][tempCell.y].removePiece();
             }
             tempChessBoardState[tempCell.x][tempCell.y].setPiece(tempChessBoardState[cell.x][cell.y].getPiece());
             x = getKing(currentPlayer).getX();
             y = getKing(currentPlayer).getY();
-            if (tempChessBoardState[cell.x][cell.y].getPiece() instanceof King) {
-                ((King) (tempChessBoardState[cell.x][cell.y].getPiece())).setX(tempCell.x);
-                ((King) (tempChessBoardState[cell.x][cell.y].getPiece())).setY(tempCell.y);
+            if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() instanceof King) {
+                ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setX(tempCell.x);
+                ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setY(tempCell.y);
                 x = tempCell.x;
                 y = tempCell.y;
             }
             tempChessBoardState[cell.x][cell.y].removePiece();
-            if (!(((King) (tempChessBoardState[x][y].getPiece())).isKingInDanger(tempChessBoardState))) {
+            if (!((King) tempChessBoardState[x][y].getPiece()).isKingInDanger(tempChessBoardState, currentPlayer)) {
+                // not in danger move
                 filteredDestinations.add(tempCell);
             }
 
         }
         System.out.println("Filtered: ");
-        printArrayList(filteredDestinations);*/
+        printArrayList(filteredDestinations);
         return possibleDestinations;
     }
 
+    // check if king in check if move is made
+    private boolean willKingBeInCheck(Cell from, Cell to) {
+//        Cell[][] tempChessBoardState = new Cell[8][8];
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                try {
+//                    tempChessBoardState[i][j] = new Cell(tempChessBoardState[i][j]);
+//                } catch (CloneNotSupportedException e) {
+//                    System.out.println(e.getLocalizedMessage());
+//                }
+//            }
+//        }
+//        if (tempChessBoardState[to.x][to.y].getPiece() != null) {
+//            tempChessBoardState[to.x][to.y].removePiece();
+//        }
+//        tempChessBoardState[to.x][to.y].setPiece(tempChessBoardState[from.x][from.y].getPiece());
+//
+//        if (tempChessBoardState[to.x][to.y].getPiece() instanceof King) {
+//            ((King) (tempChessBoardState[to.x][to.y].getPiece())).setX(to.x);
+//            ((King) (tempChessBoardState[to.x][to.y].getPiece())).setY(to.y);
+//        }
+//        tempChessBoardState[from.x][from.y].removePiece();
+//        if (((King) tempChessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].getPiece()).isKingInDanger(tempChessBoardState, currentPlayer)) {
+//            System.out.println("King in danger");
+//            return true;
+//        } else {
+//            System.out.println("King not in danger");
+//            return false;
+//        }
+        return false;
+    }
 
     private void changePlayerTurn() {
 //        TODO: Check if game over
