@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Pawn extends Piece {
 
     private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
+   // private ArrayList<Cell> possibleMovesKingContext = new ArrayList<Cell>();
 
     public Pawn(String id, String pictureName, int color) {
         setId(id);

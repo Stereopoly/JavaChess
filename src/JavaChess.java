@@ -213,7 +213,7 @@ public class JavaChess extends JFrame implements MouseListener {
                         previousCellPressed.removeCheck();
                     }
                     previousCellPressed.removePiece();
-                //    System.out.println(getKing(1 - currentPlayer).isKingInDanger(chessBoardState, 1 - currentPlayer));
+                    System.out.println(getKing(1 - currentPlayer).isKingInDanger(chessBoardState, 1 - currentPlayer));
                     /*if (getKing(1 - currentPlayer).isKingInDanger(chessBoardState)) {
                         // check if its checkmate
                         chessBoardState[getKing(1 - currentPlayer).getX()][getKing(1 - currentPlayer).getY()].setCheck();
