@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Created by Oscar on 5/10/17.
@@ -271,79 +272,79 @@ public class JavaChess extends JFrame implements MouseListener {
     }
 
     // filter moves that put king in danger
-    private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell cell) {
+    private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell fromcell) {
         ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
-        Cell[][] tempChessBoardState = new Cell[8][8];
-        int x, y;
-        for (int k = 0; k < possibleDestinations.size() - 1; k++) {
+        Cell tempChessBoardState[][] = new Cell[8][8];
+        ListIterator<Cell> it = possibleDestinations.listIterator();
+        int x,y;
+        while (it.hasNext()) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     try {
                         tempChessBoardState[i][j] = new Cell(chessBoardState[i][j]);
-                    } catch(CloneNotSupportedException e) {
-                        System.out.println(e.getLocalizedMessage());
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-            Cell tempCell = possibleDestinations.get(k);
+            Cell tempCell = it.next();
             if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() != null) {
                 tempChessBoardState[tempCell.x][tempCell.y].removePiece();
             }
-            tempChessBoardState[tempCell.x][tempCell.y].setPiece(tempChessBoardState[cell.x][cell.y].getPiece());
+            tempChessBoardState[tempCell.x][tempCell.y].setPiece(tempChessBoardState[fromcell.x][fromcell.y].getPiece());
             x = getKing(currentPlayer).getX();
             y = getKing(currentPlayer).getY();
-            if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() instanceof King) {
+            if (tempChessBoardState[fromcell.x][fromcell.y].getPiece() instanceof King) {
                 ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setX(tempCell.x);
                 ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setY(tempCell.y);
                 x = tempCell.x;
                 y = tempCell.y;
             }
-            tempChessBoardState[cell.x][cell.y].removePiece();
-            if (!((King) tempChessBoardState[x][y].getPiece()).isKingInDanger(tempChessBoardState, currentPlayer)) {
-                // not in danger move
+            tempChessBoardState[fromcell.x][fromcell.y].removePiece();
+            if (!(((King) (tempChessBoardState[x][y].getPiece())).isKingInDanger(tempChessBoardState, currentPlayer))) {
                 filteredDestinations.add(tempCell);
             }
 
         }
+
         System.out.println("Filtered: ");
         printArrayList(filteredDestinations);
-        return possibleDestinations;
+        return filteredDestinations;
     }
 
     // check if king in check if move is made
     private boolean willKingBeInCheck(Cell from, Cell to) {
-//        Cell[][] tempChessBoardState = new Cell[8][8];
-//        for (int i = 0; i < 8; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                try {
-//                    tempChessBoardState[i][j] = new Cell(tempChessBoardState[i][j]);
-//                } catch (CloneNotSupportedException e) {
-//                    System.out.println(e.getLocalizedMessage());
-//                }
-//            }
-//        }
-//        if (tempChessBoardState[to.x][to.y].getPiece() != null) {
-//            tempChessBoardState[to.x][to.y].removePiece();
-//        }
-//        tempChessBoardState[to.x][to.y].setPiece(tempChessBoardState[from.x][from.y].getPiece());
-//
-//        if (tempChessBoardState[to.x][to.y].getPiece() instanceof King) {
-//            ((King) (tempChessBoardState[to.x][to.y].getPiece())).setX(to.x);
-//            ((King) (tempChessBoardState[to.x][to.y].getPiece())).setY(to.y);
-//        }
-//        tempChessBoardState[from.x][from.y].removePiece();
-//        if (((King) tempChessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].getPiece()).isKingInDanger(tempChessBoardState, currentPlayer)) {
-//            System.out.println("King in danger");
-//            return true;
-//        } else {
-//            System.out.println("King not in danger");
-//            return false;
-//        }
-        return false;
+        Cell tempChessBoardState[][] = new Cell[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                try {
+                    tempChessBoardState[i][j] = new Cell(chessBoardState[i][j]);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (tempChessBoardState[to.x][to.y].getPiece()!=null) {
+            tempChessBoardState[to.x][to.y].removePiece();
+        }
+        tempChessBoardState[to.x][to.y].setPiece(tempChessBoardState[from.x][from.y].getPiece());
+
+        if (tempChessBoardState[to.x][to.y].getPiece() instanceof King) {
+            ((King) (tempChessBoardState[to.x][to.y].getPiece())).setX(to.x);
+            ((King) (tempChessBoardState[to.x][to.y].getPiece())).setY(to.y);
+        }
+        tempChessBoardState[from.x][from.y].removePiece();
+        if (((King) (tempChessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].getPiece())).isKingInDanger(tempChessBoardState, currentPlayer)) {
+            return true;
+        } else {
+            return false;
+        }
+
+        //return false;
     }
 
     private void changePlayerTurn() {
-//        TODO: Check if game over
+//        TODO: Check if a player is in checkmate
 
         System.out.println("Change turn");
         printArrayList(possibleDestinations);
