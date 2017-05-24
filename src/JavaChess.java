@@ -153,9 +153,9 @@ public class JavaChess extends JFrame implements MouseListener {
         System.out.println("In clear function");
         printArrayList(cells);
         System.out.println("Clear destinations");
-        for (int i = 0; i < cells.size(); i++) {
+        for (Cell cell : cells) {
             System.out.println("per cell");
-            cells.get(i).removeHighlightDestinations();
+            cell.removeHighlightDestinations();
         }
     }
 

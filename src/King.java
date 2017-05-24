@@ -21,7 +21,6 @@ public class King extends Piece {
     public ArrayList<Cell> move(Cell[][] pos, int x, int y) {
         possibleMoves.clear();
 
-//        TODO: Implement King movement
         int[] possibleX = new int[]{x, x, x + 1, x + 1, x + 1, x - 1, x - 1, x - 1};  // 8 possible moves by the king
         int[] possibleY = new int[]{y - 1, y + 1, y - 1, y, y + 1, y - 1, y, y + 1};
 
@@ -43,7 +42,6 @@ public class King extends Piece {
     public ArrayList<Cell> moveKingContext(Cell[][] pos, int x, int y) {
         possibleMovesKingContext.clear();
 
-//        TODO: Implement King movement
         int[] possibleX = new int[]{x, x, x + 1, x + 1, x + 1, x - 1, x - 1, x - 1};  // 8 possible moves by the king
         int[] possibleY = new int[]{y - 1, y + 1, y - 1, y, y + 1, y - 1, y, y + 1};
 
