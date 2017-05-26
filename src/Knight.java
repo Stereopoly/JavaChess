@@ -9,8 +9,7 @@ public class Knight extends Piece {
     private ArrayList<Cell> possibleMovesKingContext = new ArrayList<Cell>();
 
 
-    public Knight(String id, String pictureName, int color) {
-        setId(id);
+    public Knight(String pictureName, int color) {
         setPictureLocation(pictureName);
         setColor(color);
     }

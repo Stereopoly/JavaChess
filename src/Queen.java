@@ -8,8 +8,7 @@ public class Queen extends Piece {
     private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
     private ArrayList<Cell> possibleMovesKingContext = new ArrayList<Cell>();
 
-    public Queen(String id, String pictureName, int color) {
-        setId(id);
+    public Queen(String pictureName, int color) {
         setPictureLocation(pictureName);
         setColor(color);
     }

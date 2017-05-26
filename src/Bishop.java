@@ -8,8 +8,7 @@ public class Bishop extends Piece {
     private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
     private ArrayList<Cell> possibleMovesKingContext = new ArrayList<Cell>();
 
-    public Bishop(String id, String pictureName, int color) {
-        setId(id);
+    public Bishop(String pictureName, int color) {
         setPictureLocation(pictureName);
         setColor(color);
     }

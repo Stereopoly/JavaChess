@@ -4,7 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 /**
  * Created by Oscar on 5/10/17.
@@ -42,30 +41,30 @@ public class JavaChess extends JFrame implements MouseListener {
         whitePawns = new Pawn[8];
         blackPawns = new Pawn[8];
         for (int i = 0; i < whitePawns.length; i++) {
-            whitePawns[i] = new Pawn("WhitePawn0" + (i + 1), "whitepawn.png", 0);
-            blackPawns[i] = new Pawn("BlackPawn0" + (i + 1), "blackpawn.png", 1);
+            whitePawns[i] = new Pawn("whitepawn.png", 0);
+            blackPawns[i] = new Pawn("blackpawn.png", 1);
         }
         // rooks
-        whiteRook1 = new Rook("WhiteRook1", "whiterook.png", 0);
-        whiteRook2 = new Rook("WhiteRook2", "whiterook.png", 0);
-        blackRook1 = new Rook("BlackRook1", "blackrook.png", 1);
-        blackRook2 = new Rook("blackRook2", "blackrook.png", 1);
+        whiteRook1 = new Rook("whiterook.png", 0);
+        whiteRook2 = new Rook("whiterook.png", 0);
+        blackRook1 = new Rook("blackrook.png", 1);
+        blackRook2 = new Rook("blackrook.png", 1);
         // kings
-        whiteKing = new King("WhiteKing", "whiteking.png", 0, 7, 3);
-        blackKing = new King("BlackKing", "blackking.png", 1, 0, 3);
+        whiteKing = new King("whiteking.png", 0, 7, 3);
+        blackKing = new King("blackking.png", 1, 0, 3);
         // bishops
-        whiteBishop1 = new Bishop("WhiteBishop1", "whitebishop.png", 0);
-        whiteBishop2 = new Bishop("WhiteBishop2", "whitebishop.png", 0);
-        blackBishop1 = new Bishop("BlackBishop1", "blackbishop.png", 1);
-        blackBishop2 = new Bishop("BlackBishop2", "blackbishop.png", 1);
+        whiteBishop1 = new Bishop("whitebishop.png", 0);
+        whiteBishop2 = new Bishop("whitebishop.png", 0);
+        blackBishop1 = new Bishop("blackbishop.png", 1);
+        blackBishop2 = new Bishop("blackbishop.png", 1);
         // knights
-        whiteKnight1 = new Knight("WhiteKnight1", "whiteknight.png", 0);
-        whiteKnight2 = new Knight("WhiteKnight2", "whiteknight.png", 0);
-        blackKnight1 = new Knight("BlackKnight1", "blackknight.png", 1);
-        blackKnight2 = new Knight("BlacKKnight2", "blackknight.png", 1);
+        whiteKnight1 = new Knight("whiteknight.png", 0);
+        whiteKnight2 = new Knight("whiteknight.png", 0);
+        blackKnight1 = new Knight("blackknight.png", 1);
+        blackKnight2 = new Knight("blackknight.png", 1);
         // queens
-        whiteQueen = new Queen("WhiteQueen", "whitequeen.png", 0);
-        blackQueen = new Queen("BlackQueen", "blackqueen.png", 1);
+        whiteQueen = new Queen("whitequeen.png", 0);
+        blackQueen = new Queen("blackqueen.png", 1);
 
         MainScreen = new JavaChess();
         MainScreen.setVisible(true);
@@ -154,7 +153,6 @@ public class JavaChess extends JFrame implements MouseListener {
         printArrayList(cells);
         System.out.println("Clear destinations");
         for (Cell cell : cells) {
-            System.out.println("per cell");
             cell.removeHighlightDestinations();
         }
     }
@@ -256,8 +254,11 @@ public class JavaChess extends JFrame implements MouseListener {
                     if (chessBoardState[getKing(currentPlayer).getX()][getKing(currentPlayer).getY()].isCheck()) {
                         System.out.println("Is check");
                         possibleDestinations = new ArrayList<Cell>(filterKingInDangerMoves(possibleDestinations, cellPressed));
-                    } else if (!possibleDestinations.isEmpty() && willKingBeInCheck(cellPressed, possibleDestinations.get(0))) {
-                        possibleDestinations.clear();
+                    } else if (!possibleDestinations.isEmpty()) {
+                        if (willKingBeInCheck(cellPressed, possibleDestinations.get(0))) {
+                            // check if move is ok, if in check remove it
+                            possibleDestinations.clear();
+                        }
                     }
                 }
                 highlightDestinations(possibleDestinations);
@@ -265,19 +266,18 @@ public class JavaChess extends JFrame implements MouseListener {
                 printArrayList(possibleDestinations);
             }
         }
-        if (cellPressed.getPiece() != null && cellPressed.getPiece() instanceof King) {
-            ((King) cellPressed.getPiece()).setX(cellPressed.x);
-            ((King) cellPressed.getPiece()).setY(cellPressed.y);
-        }
     }
 
     // filter moves that put king in danger
     private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell fromcell) {
         ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
         Cell tempChessBoardState[][] = new Cell[8][8];
-        ListIterator<Cell> it = possibleDestinations.listIterator();
+     //   ListIterator<Cell> it = possibleDestinations.listIterator();
         int x,y;
-        while (it.hasNext()) {
+        int counter = 0;
+      //  while (it.hasNext()) {
+        while (counter < possibleDestinations.size()) {
+            // generate copy of current board to run tests on
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     try {
@@ -287,7 +287,8 @@ public class JavaChess extends JFrame implements MouseListener {
                     }
                 }
             }
-            Cell tempCell = it.next();
+       //     Cell tempCell = it.next();
+            Cell tempCell = possibleDestinations.get(counter);
             if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() != null) {
                 tempChessBoardState[tempCell.x][tempCell.y].removePiece();
             }
@@ -304,7 +305,7 @@ public class JavaChess extends JFrame implements MouseListener {
             if (!(((King) (tempChessBoardState[x][y].getPiece())).isKingInDanger(tempChessBoardState, currentPlayer))) {
                 filteredDestinations.add(tempCell);
             }
-
+            counter++;
         }
 
         System.out.println("Filtered: ");
@@ -315,6 +316,7 @@ public class JavaChess extends JFrame implements MouseListener {
     // check if king in check if move is made
     private boolean willKingBeInCheck(Cell from, Cell to) {
         Cell tempChessBoardState[][] = new Cell[8][8];
+        // generate copy of current board to run tests on
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 try {
@@ -339,7 +341,6 @@ public class JavaChess extends JFrame implements MouseListener {
         } else {
             return false;
         }
-
         //return false;
     }
 
@@ -390,4 +391,5 @@ public class JavaChess extends JFrame implements MouseListener {
             System.out.println("X: " + cell.getX() + " Y: " + cell.getY());
         }
     }
+
 }

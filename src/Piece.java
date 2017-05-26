@@ -6,8 +6,6 @@ import java.util.ArrayList;
 public abstract class Piece implements Cloneable {
     private int color;
     private String pictureLocation;
-    private String id = null;
-  //  protected ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
 
     public abstract ArrayList<Cell> move(Cell[][] pos, int x, int y);
     public abstract ArrayList<Cell> moveKingContext(Cell[][] pos, int x, int y);
@@ -26,14 +24,6 @@ public abstract class Piece implements Cloneable {
 
     public void setPictureLocation(String pictureLocation) {
         this.pictureLocation = pictureLocation;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Piece getCopy() throws CloneNotSupportedException {

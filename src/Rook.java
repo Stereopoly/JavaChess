@@ -9,8 +9,7 @@ public class Rook extends Piece {
     private ArrayList<Cell> possibleMovesKingContext = new ArrayList<Cell>();
 
 
-    public Rook(String id, String pictureName, int color) {
-        setId(id);
+    public Rook(String pictureName, int color) {
         setPictureLocation(pictureName);
         setColor(color);
     }

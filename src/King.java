@@ -9,8 +9,7 @@ public class King extends Piece {
     private ArrayList<Cell> possibleMoves = new ArrayList<Cell>();
     private ArrayList<Cell> possibleMovesKingContext = new ArrayList<Cell>();
 
-    public King(String id, String pictureName, int color, int x, int y) {
-        setId(id);
+    public King(String pictureName, int color, int x, int y) {
         setPictureLocation(pictureName);
         setColor(color);
         setX(x);
@@ -73,6 +72,7 @@ public class King extends Piece {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
+                // look through all pieces, find all their moves, and see if any of them land on a king
                 if (tempChessBoardState[i][j].getPiece() == null) {
                     continue;
                 }
