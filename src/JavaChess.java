@@ -149,8 +149,6 @@ public class JavaChess extends JFrame implements MouseListener {
     // Functions for highlighting cells
     private void clearDestinations(ArrayList<Cell> cells) {
         System.out.println("Length of array to clear: " + cells.size());
-        System.out.println("In clear function");
-        printArrayList(cells);
         System.out.println("Clear destinations");
         for (Cell cell : cells) {
             cell.removeHighlightDestinations();
@@ -217,6 +215,22 @@ public class JavaChess extends JFrame implements MouseListener {
                         // check if its checkmate
                         chessBoardState[getKing(1 - currentPlayer).getX()][getKing(1 - currentPlayer).getY()].setCheck();
                         // TODO: Checkmate logic
+                        if (isCheckmate(getKing(1 - currentPlayer).getColor())) {
+                            previousCellPressed.deselectPiece();
+                            if (previousCellPressed.getPiece() != null) {
+                                previousCellPressed.removePiece();
+                            }
+                            System.out.println("Game Over");
+                            String winner = "";
+                            if (currentPlayer == 0) {
+                                // white wins
+                                winner =  "White";
+                            } else {
+                                // blacks wins
+                                winner = "Black";
+                            }
+                            JOptionPane.showMessageDialog(board, "Checkmate!\n" + winner + " is victorious.");
+                        }
                     }
                     if (!getKing(currentPlayer).isKingInDanger(chessBoardState, currentPlayer)) {
                         // not in check anymore
@@ -269,7 +283,7 @@ public class JavaChess extends JFrame implements MouseListener {
     }
 
     // filter moves that put king in danger
-    private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell fromcell) {
+    private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell from) {
         ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
         Cell tempChessBoardState[][] = new Cell[8][8];
      //   ListIterator<Cell> it = possibleDestinations.listIterator();
@@ -292,16 +306,16 @@ public class JavaChess extends JFrame implements MouseListener {
             if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() != null) {
                 tempChessBoardState[tempCell.x][tempCell.y].removePiece();
             }
-            tempChessBoardState[tempCell.x][tempCell.y].setPiece(tempChessBoardState[fromcell.x][fromcell.y].getPiece());
+            tempChessBoardState[tempCell.x][tempCell.y].setPiece(tempChessBoardState[from.x][from.y].getPiece());
             x = getKing(currentPlayer).getX();
             y = getKing(currentPlayer).getY();
-            if (tempChessBoardState[fromcell.x][fromcell.y].getPiece() instanceof King) {
+            if (tempChessBoardState[from.x][from.y].getPiece() instanceof King) {
                 ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setX(tempCell.x);
                 ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setY(tempCell.y);
                 x = tempCell.x;
                 y = tempCell.y;
             }
-            tempChessBoardState[fromcell.x][fromcell.y].removePiece();
+            tempChessBoardState[from.x][from.y].removePiece();
             if (!(((King) (tempChessBoardState[x][y].getPiece())).isKingInDanger(tempChessBoardState, currentPlayer))) {
                 filteredDestinations.add(tempCell);
             }
@@ -342,6 +356,67 @@ public class JavaChess extends JFrame implements MouseListener {
             return false;
         }
         //return false;
+    }
+
+    private boolean isCheckmate(int color) {
+        ArrayList<Cell> anyMoves = new ArrayList<Cell>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (chessBoardState[i][j].getPiece() != null) {
+                    if (chessBoardState[i][j].getPiece().getColor() == color) {
+                        anyMoves.clear();
+                        anyMoves = chessBoardState[i][j].getPiece().move(chessBoardState, i, j);
+                        anyMoves = checkmateHelper(anyMoves, chessBoardState[i][j], color);
+                        if (anyMoves.size() != 0) {
+                            // can still move not mated
+                            System.out.println("Not checkmate");
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("Checkmate");
+        return true;
+    }
+
+    private ArrayList<Cell> checkmateHelper(ArrayList<Cell> possibleDestinations, Cell from, int color) {
+        ArrayList<Cell> filtered = new ArrayList<Cell>();
+        Cell[][] tempChessBoardState = new Cell[8][8];
+
+        int counter = 0;
+        int x, y;
+        while (counter < possibleDestinations.size()) {
+            // generate copy of current board to run tests on
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    try {
+                        tempChessBoardState[i][j] = new Cell(chessBoardState[i][j]);
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            Cell tempCell = possibleDestinations.get(counter);
+            if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() != null) {
+                tempChessBoardState[tempCell.x][tempCell.y].removePiece();
+            }
+            tempChessBoardState[tempCell.x][tempCell.y].setPiece(tempChessBoardState[from.x][from.y].getPiece());
+            x = getKing(color).getX();
+            y = getKing(color).getY();
+            if (tempChessBoardState[from.x][from.y].getPiece() instanceof King) {
+                ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setX(tempCell.x);
+                ((King) (tempChessBoardState[tempCell.x][tempCell.y].getPiece())).setY(tempCell.y);
+                x = tempCell.x;
+                y = tempCell.y;
+            }
+            tempChessBoardState[from.x][from.y].removePiece();
+            if (!(((King) (tempChessBoardState[x][y].getPiece())).isKingInDanger(tempChessBoardState, 1 - currentPlayer))) {
+                filtered.add(tempCell);
+            }
+            counter++;
+        }
+        return filtered;
     }
 
     private void changePlayerTurn() {

@@ -78,7 +78,6 @@ public class King extends Piece {
                 }
                 if (tempChessBoardState[i][j].getPiece().getColor() != color) {
                     // opposing color
-                    System.out.println("Color: " + tempChessBoardState[i][j].getPiece().getColor());
                     ArrayList<Cell> tempMoves = tempChessBoardState[i][j].getPiece().moveKingContext(tempChessBoardState, i, j);
                     for (Cell move : tempMoves) {
                         if (move.getPiece() != null) {
