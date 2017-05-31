@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -30,10 +29,8 @@ public class JavaChess extends JFrame implements MouseListener {
     private int currentPlayer = 0;   // 0 for white, 1 for black
     private ArrayList<Cell> possibleDestinations = new ArrayList<Cell>();
 
-
     private static JavaChess MainScreen;
     private JPanel board = new JPanel(new GridLayout(8, 8));
-
 
     public static void main(String[] args) {
         // generate pieces
@@ -73,12 +70,10 @@ public class JavaChess extends JFrame implements MouseListener {
 
     public JavaChess() {
         board = new JPanel(new GridLayout(8, 8));
-        board.setMinimumSize(new Dimension(480, 480));
 
         Cell cell;
         Piece piece;
 
-        board.setBorder(BorderFactory.createLoweredBevelBorder());
         content = getContentPane();
         setSize(width, height);
         setTitle("Java Chess");
@@ -90,7 +85,6 @@ public class JavaChess extends JFrame implements MouseListener {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 piece = null;
-
                 if (i == 0 && j == 0) {
                     piece = blackRook1;
                 } else if (i == 0 && j == 7) {
@@ -214,7 +208,6 @@ public class JavaChess extends JFrame implements MouseListener {
                     if (getKing(1 - currentPlayer).isKingInDanger(chessBoardState, 1 - currentPlayer)) {
                         // check if its checkmate
                         chessBoardState[getKing(1 - currentPlayer).getX()][getKing(1 - currentPlayer).getY()].setCheck();
-                        // TODO: Checkmate logic
                         if (isCheckmate(getKing(1 - currentPlayer).getColor())) {
                             previousCellPressed.deselectPiece();
                             if (previousCellPressed.getPiece() != null) {
@@ -286,10 +279,8 @@ public class JavaChess extends JFrame implements MouseListener {
     private ArrayList<Cell> filterKingInDangerMoves(ArrayList<Cell> possibleDestinations, Cell from) {
         ArrayList<Cell> filteredDestinations = new ArrayList<Cell>();
         Cell tempChessBoardState[][] = new Cell[8][8];
-     //   ListIterator<Cell> it = possibleDestinations.listIterator();
         int x,y;
         int counter = 0;
-      //  while (it.hasNext()) {
         while (counter < possibleDestinations.size()) {
             // generate copy of current board to run tests on
             for (int i = 0; i < 8; i++) {
@@ -301,7 +292,6 @@ public class JavaChess extends JFrame implements MouseListener {
                     }
                 }
             }
-       //     Cell tempCell = it.next();
             Cell tempCell = possibleDestinations.get(counter);
             if (tempChessBoardState[tempCell.x][tempCell.y].getPiece() != null) {
                 tempChessBoardState[tempCell.x][tempCell.y].removePiece();
@@ -420,8 +410,6 @@ public class JavaChess extends JFrame implements MouseListener {
     }
 
     private void changePlayerTurn() {
-//        TODO: Check if a player is in checkmate
-
         System.out.println("Change turn");
         printArrayList(possibleDestinations);
 
